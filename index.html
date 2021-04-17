@@ -5,6 +5,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="/src/main.css" />
   </head>
-  <body></body>
+  <body>
+    <h1>ToDoリスト</h1>
+    <ul class="status_list">
+      <li>
+        <label for="allList"><input id="allList" type="radio" name="status" />全て</label>
+      </li>
+      <li>
+        <label for="nowList"><input id="nowList" type="radio" name="status" />作業中</label>
+      </li>
+      <li>
+        <label for="complete"><input id="complete" type="radio" name="status" />完了</label>
+      </li>
+    </ul>
+    <table id="todoTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>コメント</th>
+          <th>完了</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="ui_wrap">
+      <h2>新規タスクの追加</h2>
+      <div><input id="comment_input" type="text" /><button id="addButton">追加</button></div>
+    </div>
+
+    <script src="/src/index.js"></script>
+  </body>
 </html>
