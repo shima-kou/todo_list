@@ -21,9 +21,7 @@ const addTableRow = (inputText) => {
   for (let i = 0; i < insertArray.length; i++) {
     const newCell = newTableRow.insertCell();
     const newText = insertArray[i];
-
     if (typeof newText === 'object') {
-      console.log(newText.id);
       const newElement = document.createElement('button');
       newElement.setAttribute('class', newText.class);
       newElement.innerText = newText.text;
