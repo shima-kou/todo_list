@@ -1,41 +1,72 @@
 const todoTable = document.getElementById('todoTable');
 const addButton = document.getElementById('addButton');
 const commentInput = document.getElementById('comment_input');
-let idCounter = 0;
+let todosArray = [];
+let deleteButtonList;
 
-const addTableRow = (inputText) => {
-  const newTableRow = todoTable.insertRow();
-  const insertArray = [
-    idCounter,
-    inputText,
-    {
-      class: 'statusButton',
-      text: '作業中',
-    },
-    {
-      class: 'deleteButton',
-      text: '削除',
-    },
-  ];
-
-  for (let i = 0; i < insertArray.length; i++) {
-    const newCell = newTableRow.insertCell();
-    const newText = insertArray[i];
-    if (typeof newText === 'object') {
-      const newElement = document.createElement('button');
-      newElement.setAttribute('class', newText.class);
-      newElement.innerText = newText.text;
-      newCell.appendChild(newElement);
-    } else {
-      const newText = document.createTextNode(insertArray[i]);
-      newCell.appendChild(newText);
+const deleteTableRow = () => {
+  const countRow = todoTable.rows.length;
+  for (let i = 0; i < countRow; i++) {
+    if (i !== 0) {
+      todoTable.deleteRow(-1);
     }
   }
+};
 
+const createButton = (elementClass, text, index) => {
+  const createButton = document.createElement('button');
+  createButton.setAttribute('class', elementClass);
+  createButton.innerText = text;
+  if (index !== null || index !== undefined) {
+    createButton.setAttribute('data-index', index);
+  }
+  return createButton;
+};
+
+const deleteTodo = (number) => {
+  todosArray.splice(number, 1);
+  refleshTable(todosArray);
+};
+
+const refleshTable = (array) => {
+  deleteTableRow();
+  let counter = 0;
+  array.forEach((value) => {
+    const newTableRow = todoTable.insertRow(-1);
+    const statusButton = createButton('status_button', value.status, counter);
+    const deleteButton = createButton('delete_button', '削除', counter);
+
+    const rowArray = [counter, value.task, statusButton, deleteButton];
+
+    for (let i = 0; i < rowArray.length; i++) {
+      const newCell = newTableRow.insertCell(-1);
+      if (typeof rowArray[i] !== 'object') {
+        const newText = document.createTextNode(rowArray[i]);
+        newCell.appendChild(newText);
+      } else {
+        newCell.appendChild(rowArray[i]);
+      }
+    }
+    counter++;
+  });
+
+  deleteButtonList = document.querySelectorAll('.delete_button');
+  deleteButtonList.forEach((button) => {
+    button.addEventListener('click', (e) => {
+      deleteTodo(e.target.getAttribute('data-index'));
+    });
+  });
+};
+
+const addTodoList = (inputText) => {
+  todosArray.push({
+    task: inputText,
+    status: '作業中',
+  });
   commentInput.value = '';
-  idCounter++;
+  refleshTable(todosArray);
 };
 
 addButton.addEventListener('click', () => {
-  addTableRow(commentInput.value);
+  addTodoList(commentInput.value);
 });
