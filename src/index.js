@@ -1,7 +1,7 @@
 const todoTable = document.getElementById('todoTable');
 const addButton = document.getElementById('addButton');
 const commentInput = document.getElementById('comment_input');
-let todosArray = [];
+const todosArray = [];
 let deleteButtonList, statusButtonList;
 
 const deleteTableRow = () => {
@@ -28,7 +28,7 @@ const deleteTodo = (number) => {
   refleshTable(todosArray);
 };
 
-const changeTodoStatus = (number) => {
+const changeTodoStts = (number) => {
   const status = todosArray[number].status;
   if (status === '作業中') {
     todosArray[number].status = '完了';
@@ -70,7 +70,7 @@ const refleshTable = (array) => {
   statusButtonList = document.querySelectorAll('.status_button');
   statusButtonList.forEach((button) => {
     button.addEventListener('click', (e) => {
-      changeTodoStatus(e.target.getAttribute('data-index'));
+      changeTodoStts(e.target.getAttribute('data-index'));
     });
   });
 };
