@@ -1,8 +1,9 @@
 const todoTable = document.getElementById('todoTable');
 const addButton = document.getElementById('addButton');
 const commentInput = document.getElementById('comment_input');
+const stateRadio = document.getElementsByName('status');
 const todosArray = [];
-let deleteButtonList, statusButtonList;
+let deleteButtonList, stateButtonList, stateParam;
 
 const deleteTableRow = () => {
   const countRow = todoTable.rows.length;
@@ -25,7 +26,7 @@ const createButton = (elementClass, text, index) => {
 
 const deleteTodo = (number) => {
   todosArray.splice(number, 1);
-  refleshTable(todosArray);
+  refleshTable(todosArray, stateParam);
 };
 
 const changeTodoStts = (number) => {
@@ -35,18 +36,24 @@ const changeTodoStts = (number) => {
   } else {
     todosArray[number].status = '作業中';
   }
-  refleshTable(todosArray);
+  refleshTable(todosArray, stateParam);
 };
 
-const refleshTable = (array) => {
+const refleshTable = (array, status) => {
   deleteTableRow();
-  let counter = 0;
-  array.forEach((value) => {
-    const newTableRow = todoTable.insertRow(-1);
-    const statusButton = createButton('status_button', value.status, counter);
-    const deleteButton = createButton('delete_button', '削除', counter);
 
-    const rowArray = [counter, value.task, statusButton, deleteButton];
+  array.forEach((value, index) => {
+    if (status === '作業中' && value.status !== '作業中') {
+      return;
+    }
+    if (status === '完了' && value.status !== '完了') {
+      return;
+    }
+    const newTableRow = todoTable.insertRow(-1);
+    const statusButton = createButton('status_button', value.status, index);
+    const deleteButton = createButton('delete_button', '削除', index);
+
+    const rowArray = [index, value.task, statusButton, deleteButton];
 
     for (let i = 0; i < rowArray.length; i++) {
       const newCell = newTableRow.insertCell(-1);
@@ -57,7 +64,6 @@ const refleshTable = (array) => {
         newCell.appendChild(rowArray[i]);
       }
     }
-    counter++;
   });
 
   deleteButtonList = document.querySelectorAll('.delete_button');
@@ -67,8 +73,8 @@ const refleshTable = (array) => {
     });
   });
 
-  statusButtonList = document.querySelectorAll('.status_button');
-  statusButtonList.forEach((button) => {
+  stateButtonList = document.querySelectorAll('.status_button');
+  stateButtonList.forEach((button) => {
     button.addEventListener('click', (e) => {
       changeTodoStts(e.target.getAttribute('data-index'));
     });
@@ -81,8 +87,15 @@ const addTodoList = (inputText) => {
     status: '作業中',
   });
   commentInput.value = '';
-  refleshTable(todosArray);
+  refleshTable(todosArray, stateParam);
 };
+
+stateRadio.forEach(function (e) {
+  e.addEventListener('click', function () {
+    stateParam = document.querySelector('input:checked[name=status]').value;
+    refleshTable(todosArray, stateParam);
+  });
+});
 
 addButton.addEventListener('click', () => {
   addTodoList(commentInput.value);
